@@ -1,35 +1,38 @@
 import io
 from unittest import TestCase
-from .main import move, read_sub_commands, move_with_aim
+from utils.inputs import readlines_as_int
+from .main import calculate_gamma_rate, calculate_epsilon_rate, count_ones
 
 
 class TestSubCommands(TestCase):
-    sample_input = """forward 5
-                      down 5
-                      forward 8
-                      up 3
-                      down 8
-                      forward 2"""
+    sample_input = """00100
+                    11110
+                    10110
+                    10111
+                    10101
+                    01111
+                    00111
+                    11100
+                    10000
+                    11001
+                    00010
+                    01010"""
 
     @staticmethod
     def parse_input(input_str):
         with io.StringIO(input_str) as f:
-            return read_sub_commands(f)
+            return [line.strip() for line in f.readlines()]
 
-    def test_parse_input(self):
-        parsed = self.parse_input(self.sample_input)
-        assert parsed[0] == ("forward", 5)
-        assert len(parsed) == 6
-        assert parsed[5] == ("forward", 2)
+    def test_count_ones(self):
+        report = self.parse_input(self.sample_input)
+        assert count_ones(report) == [7, 5, 8, 7, 5]
 
-    def test_sample_move(self):
-        parsed = self.parse_input(self.sample_input)
-        depth, h_pos = move(parsed)
-        assert depth == 10
-        assert h_pos == 15
+    def test_sample_gamma(self):
+        report = self.parse_input(self.sample_input)
+        gamma_rate = calculate_gamma_rate(report)
+        assert gamma_rate == 22
 
-    def test_sample_move_with_aim(self):
-        parsed = self.parse_input(self.sample_input)
-        depth, h_pos = move_with_aim(parsed)
-        assert depth == 60
-        assert h_pos == 15
+    def test_sample_epsilon(self):
+        report = self.parse_input(self.sample_input)
+        epsilon_rate = calculate_epsilon_rate(report)
+        assert epsilon_rate == 9

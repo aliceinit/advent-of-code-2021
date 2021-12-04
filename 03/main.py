@@ -1,64 +1,61 @@
 from utils.inputs import readlines_as_int
 
 
-def move(commands, initial_depth=0, initial_horizontal_position=0):
+def count_ones(diagnostic_report):
     """
-    Calculates final position after applying commands to the initial position
-    :param commands: pairs of directions (forward, up, or down) & integers
-    :param initial_depth: int, defaults to 0
-    :param initial_horizontal_position: int, defaults to 0
-    :return: tuple (depth, horizontal position)
+    takes a list of binary numbers as strings and counts how many ones appear
+    in each position across all numbers
+    :param diagnostic_report: list of binary numbers represented as strings
+    :return: list of numbers with length = length of each row of the diagnstic report
+             each list value represents the number of ones seen in each position
     """
-    depth = initial_depth
-    h_pos = initial_horizontal_position
+    one_count = [0 for _ in diagnostic_report[0]]
 
-    for command, distance in commands:
-        if command == "forward":
-            h_pos = h_pos + distance
-        elif command == "up":
-            depth = depth - distance
-        elif command == "down":
-            depth = depth + distance
-        else:
-            raise ValueError(f"Unrecognized command {command}")
+    for num in diagnostic_report:
+        for i, bit in enumerate(num):
+            if bit == "1":
+                one_count[i] += 1
 
-    return depth, h_pos
+    return one_count
 
-def move_with_aim(commands, initial_depth=0, initial_horizontal_position=0):
+
+def calculate_gamma_rate(diagnostic_report):
     """
-    Calculates final aim position based on commands
-    :param commands: pairs of directions (forward, up, or down) & integers
-    :param initial_depth: int, defaults to 0
-    :param initial_horizontal_position: int, defaults to 0
-    :return: tuple, (depth, horizontal position)
+    Calculates gamma rate from a diagnostic report
+    Gamma rate is a new number which uses the most common bit for each position
+    across all binary numbers in the diagnostic report
+    :param diagnostic_report: list of numbers
+    :return: int (decimal), gamma rate
     """
-    depth = initial_depth
-    h_pos = initial_horizontal_position
-    aim = 0
+    one_counts = count_ones(diagnostic_report)
+    sample_size = len(diagnostic_report)
 
-    for command, amount in commands:
-        if command == "forward":
-            h_pos = h_pos + amount
-            depth = depth + (aim * amount)
-        elif command == "up":
-            aim = aim - amount
-        elif command == "down":
-            aim = aim + amount
-        else:
-            raise ValueError(f"Unrecognized command {command}")
-
-    return depth, h_pos
+    return int("".join(["1"
+                        if count > sample_size / 2
+                        else "0"
+                        for count in one_counts]), 2)
 
 
-def read_sub_commands(file):
-    string_pairs = [line.strip().split(" ") for line in file.readlines()]
-    return [(s[0], int(s[1])) for s in string_pairs]
+def calculate_epsilon_rate(diagnostic_report):
+    """
+    Calculates epsilon rate from a diagnostic report
+    Epsilon rate is a new number which uses the least common bit for each position
+    across all binary numbers in the diagnostic report
+    :param diagnostic_report: list of numbers
+    :return: int (decimal), epsilon rate
+    """
+    one_counts = count_ones(diagnostic_report)
+    sample_size = len(diagnostic_report)
+
+    return int("".join(["0"
+                        if count > sample_size / 2
+                        else "1"
+                        for count in one_counts]), 2)
 
 
 if __name__ == '__main__':
     with open("puzzle_1_input.text", "r") as f:
-        commands = read_sub_commands(f)
-        final_pos = move(commands)
-        final_correct_pos = move_with_aim(commands)
-        print(f"Final position vals multiplied = {final_pos[0] * final_pos[1]}")
-        print(f"Final correct position vals multiplied = {final_correct_pos[0] * final_correct_pos[1]}")
+        report = [line.strip() for line in f.readlines()]
+        gamma = calculate_gamma_rate(report)
+        epsilon = calculate_epsilon_rate(report)
+        print(f"Gamma x Epsilon = {gamma * epsilon}")
