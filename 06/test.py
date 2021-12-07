@@ -7,7 +7,7 @@ class TestSubCommands(TestCase):
     sample_input = """3,4,3,1,2"""
 
     @staticmethod
-    def parse_input(input_str, exclude_diagonals=False):
+    def parse_input(input_str):
         with io.StringIO(input_str) as f:
             return parse_lanternfish(f)
 
