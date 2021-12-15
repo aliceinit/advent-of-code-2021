@@ -98,3 +98,18 @@ class TestSubCommands(TestCase):
         cave_graph = self.parse_input(self.sample_input_biggest)
         paths = get_all_paths(cave_graph)
         self.assertEqual(226, len(paths))
+
+    def test_sample_input_small_with_doubles(self):
+        cave_graph = self.parse_input(self.sample_input_small)
+        paths = get_all_paths_with_double_visit(cave_graph)
+        self.assertEqual(36, len(paths))
+
+    def test_sample_input_large_with_doubles(self):
+        cave_graph = self.parse_input(self.sample_input_large)
+        paths = get_all_paths_with_double_visit(cave_graph)
+        self.assertEqual(103, len(paths))
+
+    def test_sample_input_biggest_with_doubles(self):
+        cave_graph = self.parse_input(self.sample_input_biggest)
+        paths = get_all_paths_with_double_visit(cave_graph)
+        self.assertEqual(3509, len(paths))

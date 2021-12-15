@@ -32,6 +32,31 @@ def get_all_paths(start_cave: Cave):
     return paths
 
 
+def get_all_paths_with_double_visit(start_cave: Cave):
+    paths = []
+    exploration_queue = Queue()
+
+    for next_cave in start_cave.connected_caves:
+        exploration_queue.put((next_cave, [start_cave.name], False))
+
+    while not exploration_queue.empty():
+        cave, partial_path, duplicate_slot_used = exploration_queue.get()
+        if cave.name == "end":
+            full_path = [name for name in partial_path] + [cave.name]
+            paths.append(full_path)
+        elif cave.is_big or \
+                (cave.name != "start" and (
+                    cave.name not in partial_path or duplicate_slot_used is False
+                )):
+            # This cave is a valid next step in a path
+            if cave.name in partial_path and not cave.is_big:
+                duplicate_slot_used = True
+            for next_cave in cave.connected_caves:
+                next_path = [name for name in partial_path] + [cave.name]
+                exploration_queue.put((next_cave, next_path, duplicate_slot_used))
+    return paths
+
+
 def build_cave_graph(file):
     caves_by_name = {}
     for line in file.readlines():
@@ -56,3 +81,5 @@ if __name__ == '__main__':
         cave_graph = build_cave_graph(f)
         paths = get_all_paths(cave_graph)
         print(f"Total Possible paths = {len(paths)}")
+        paths_plus_one_visit = get_all_paths_with_double_visit(cave_graph)
+        print(f"Total Paths allowing one extra small cave visit = {len(paths_plus_one_visit)}")
