@@ -40,6 +40,10 @@ class TestSubCommands(TestCase):
         self.assertEqual((expected_state, 1656),
                          predict_octopodes(initial_energy, steps=100))
 
+    def test_sample_input_find_sync(self):
+        initial_energy = self.parse_input(self.sample_input_large)
+        self.assertEqual(195, predict_sync_step(initial_energy))
+
     def test_sample_input_small(self):
         initial_energy = self.parse_input(self.sample_input_small)
         expected_phase_1 = self.parse_input(""" 34543
