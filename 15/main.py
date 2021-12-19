@@ -1,3 +1,5 @@
+import io
+
 from heapdict import heapdict
 
 
@@ -69,8 +71,37 @@ def parse_cave_paths(file):
     return nodes[0][0], nodes[max_y][max_x]
 
 
+def expand_input(file):
+    base_position_list = [
+        [int(i) for i in line.strip()]
+        for line in file.readlines()
+    ]
+    positions = []
+    for tile_row in range(5):
+        for row, position_row in enumerate(base_position_list):
+            positions.append([])
+            for tile_col in range(5):
+                for col, risk in enumerate(position_row):
+                    risk = risk + tile_col + tile_row
+                    risk = risk if risk < 10 else risk + 1
+                    risk = (risk % 10)
+                    positions[-1].append(risk)
+
+    expanded = ""
+    for row in positions:
+        expanded += "".join([str(i) for i in row]) + "\n"
+    return expanded
+
+
 if __name__ == '__main__':
     with open("puzzle_1_input.text", "r") as f:
         nodes = parse_cave_paths(f)
         least_score = find_best_path(*nodes)
         print(f"Lowest possible path risk = {least_score}")
+
+    with open("puzzle_1_input.text", "r") as f:
+        expanded = expand_input(f)
+        with io.StringIO(expanded) as e:
+            expanded_nodes = parse_cave_paths(e)
+            expanded_risk = find_best_path(*expanded_nodes)
+            print(f"Lowest score after expanding input: {expanded_risk}")
