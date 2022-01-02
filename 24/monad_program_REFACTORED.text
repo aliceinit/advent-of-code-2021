@@ -1,0 +1,260 @@
+# Phase 1: input value A
+# Logical Outcome (relevant to next phase)
+#   z = A + 8
+
+inp w
+add z 8
+add z w
+prn z
+
+# Phase2: input value B
+# Logical Outcome (relevant to next phase)
+#   z = ((A + 8) * 26) + B + 13
+
+inp w
+mul z 26
+add z w
+add z 13
+prn z
+
+# Phase 3: input value C
+# Logical Outcome (relevant to next phase)
+#   x = C + 2
+
+inp w
+add x w
+add x 2
+prn z
+
+# Phase 4: input value D
+# Logical Outcome (relevant to next phase)
+# ===> z will approach 0 if D - C == 2
+#   if D-C = 2:
+#       z = z
+#   if D - C != 2:
+#       z = (z * 26) + D + 7
+
+inp w
+eql x w
+eql x 0  # logical 'not'
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 7
+mul y x
+add z y
+mul x 0
+mul y 0
+prn z
+
+# Phase 5: input value E
+# Logical Outcome (relevant to next phase)
+#   z = (z * 26) + E + 11
+
+inp w
+mul z 26
+add z w
+add z 11
+prn z
+
+# Phase 6: input value F
+# Logical Outcome (relevant to next phase)
+#   z = (z * 26) + F + 4
+
+inp w
+
+mul z 26
+add z w
+add z 4
+prn z
+
+# Phase 7: input value G
+# Logical Outcome (relevant to next phase)
+#       ... z not directly affected
+#   x = G + 5
+
+inp w
+add x w
+add x 5
+prn z
+
+# Phase 8: input value H
+# Logical Outcome (relevant to next phase)
+#   if G + 5 = H:
+#       z = z
+#   else:
+#       z = z * 26 + H + 13
+inp w
+eql x w
+eql x 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 13
+mul y x
+add z y
+mul x 0
+mul y 0
+prn z
+
+# Phase 9: input value I
+# Logical Outcome (relevant to next phase)
+#   if z % 26 - 9 == I
+#       z = z /26
+#   else:
+#       z = z + I + 10
+inp w
+
+add x z
+mod x 26
+div z 26
+add x -9
+eql x w
+eql x 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 10
+mul y x
+add z y
+mul x 0
+mul y 0
+prn z
+
+# Phase 10: input value J
+# Logical Outcome (relevant to next phase)
+#   z = z * 26 + J + 1
+
+inp w
+mul z 26
+add z w
+add z 1
+prn z
+
+# Phase 11: input value K
+# Logical Outcome (relevant to next phase)
+#   if J + 1 = K:
+#       z = z / 26
+#   else:
+#       z = z + K + 2
+
+inp w
+add x z
+mod x 26
+div z 26
+eql x w
+eql x 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 2
+mul y x
+add z y
+mul x 0
+mul y 0
+prn z
+
+# Phase 12: input value L
+# Logical Outcome (relevant to next phase)
+#   z % 26 - 5 == L? (0 - 5 ... or)
+#   z = z / 26
+#
+#   if K - 3 == L:
+#       x = 0
+#       y = 1
+#       z = z / 26
+#   else:
+#       x = 1
+#       y = 26
+#       z = z + L + 14
+inp w
+
+add x z
+mod x 26
+div z 26
+add x -5
+eql x w
+eql x 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 14
+mul y x
+add z y
+mul x 0
+mul y 0
+prn z
+
+# Phase 13: input value M
+# Logical Outcome (relevant to next phase)
+#   x = z % 26 - 6
+#   z = z / 26
+#   if M == z%26 - 6:  (-6 if we use previous rule... otherwise L + 8?)
+#       z = z / 26
+#   else:
+#       z = z + M + 6
+
+inp w
+add x z
+mod x 26
+div z 26
+add x -6
+eql x w
+eql x 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 6
+mul y x
+add z y
+mul x 0
+mul y 0
+prn z
+
+# Phase 13: input value N
+# Logical Outcome (relevant to next phase)
+#   x = z % 26 -12
+#   if z % 26 -12 (M - 6 OR -12?):
+#       x = 0
+#       y = 1
+#       z = z / 26
+#   else:
+#       x = 1
+#       y = 26
+#       z = z + N + 14
+inp w
+
+add x z
+mod x 26
+div z 26
+add x -12
+eql x w
+eql x 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 14
+mul y x
+add z y
+prn z
